@@ -1,23 +1,25 @@
-#! /bin/sh
-#
-# skeleton	example file to build /etc/init.d/ scripts.
-#		This file should be used to construct scripts for /etc/init.d.
-#
-#		Written by Miquel van Smoorenburg <miquels@cistron.nl>.
-#		Modified for Debian
-#		by Ian Murdock <imurdock@gnu.ai.mit.edu>.
-#               Further changes by Javier Fernandez-Sanguino <jfs@debian.org>
-#
-# Version:	@(#)skeleton  1.9  26-Feb-2001  miquels@cistron.nl
-#
+#!/bin/sh
 
+set -e
+### BEGIN INIT INFO
+# Provides:		play-control
+# Required-Start:	$local_fs $remote_fs $network $time
+# Required-Stop:	$local_fs $remote_fs $network $time
+# Should-Start:		$syslog
+# Should-Stop:		$syslog
+# Default-Start:	2 3 4 5
+# Default-Stop:		0 1 6
+# Short-Description:	Play framework application controller
+### END INIT INFO
+
+#
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=java
 NAME=play-control
 DESC=play-app
 
 #LOGDIR=/var/log/play-control
-DODTIME=5                   # Time to wait for the server to die, in seconds
+DODTIME=10                   # Time to wait for the server to die, in seconds
                             # If this value is set too low you might not
                             # let some servers to die gracefully and
                             # 'restart' will not work
@@ -29,7 +31,7 @@ if [ -f /etc/default/play-control ] ; then
     . /etc/default/play-control
 fi
 
-APPS="`cd $PLAY_APPS_DIR && ls`"
+APPS="`cd $PLAY_APPS_DIR && /bin/ls`"
 
 # Override the configured apps with the ones specified on the command line
 if [ "$#" -gt 1 ]
@@ -87,11 +89,13 @@ force_stop() {
 }
 
 start_playapp() {
-	su - $USER -c "cd $PLAY_APPS_DIR; $PLAY start $1" > /dev/null 2>&1
+	[ -d "$PLAY_APPS_DIR/$1" ] && /bin/su - $USER -c "cd $PLAY_APPS_DIR/$1; $PLAY dependencies; $PLAY start" > /dev/null 2>&1
+	return 0
 }
 
 stop_playapp() {
-	su - $USER -c "cd $PLAY_APPS_DIR; $PLAY stop $1" > /dev/null 2>&1
+	[ -d "$PLAY_APPS_DIR/$1" ] && /bin/su - $USER -c "cd $PLAY_APPS_DIR; $PLAY stop $1" > /dev/null 2>&1
+	return 0
 }
 
 case "$ACTION" in
@@ -103,15 +107,16 @@ case "$ACTION" in
 
 		if running
 		then
-			log_action_msg "$APP already started"
+			#log_action_msg "$APP already started"
+			echo "$DESC: $APP already started"
 		else
 			start_playapp $APP
 
 			if running
 			then
-				echo "$APP."
+				echo "$DESC: $APP started."
 			else
-				echo "$APP ERROR."
+				echo "$DESC: $APP gives error."
 			fi
 		fi
 	done
@@ -128,9 +133,9 @@ case "$ACTION" in
 
 			if running
 			then
-				echo "$APP ERROR."
+				echo "Stopping $DESC: $APP ERROR."
 			else
-				echo "$APP."
+				echo "Stopping $DESC: $APP."
 			fi
 		fi
 	done
