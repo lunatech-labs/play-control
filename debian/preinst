@@ -13,10 +13,14 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+PLAY_APPS_DIR=/usr/share/play-apps
 
 case "$1" in
     install)
 	useradd --system playapps
+	// Create the directory and make sure it is own by playapps
+	mkdir -p $PLAY_APPS_DIR 
+	chown -R playapps:playapps $PLAY_APPS_DIR
     ;;
 
     upgrade)

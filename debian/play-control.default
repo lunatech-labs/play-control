@@ -5,7 +5,7 @@
 #
 
 # The location of the Play apps
-PLAY_APPS_DIR="/usr/share/playapps"
+PLAY_APPS_DIR="/usr/share/play-apps"
 
 # Location of the Play script
 PLAY=/usr/bin/play
