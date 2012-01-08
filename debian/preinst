@@ -23,6 +23,11 @@ case "$1" in
     ;;
 
     upgrade)
+	if [ ! -d "$PLAY_APPS_DIR" ] then;
+	useradd --system playapps
+        mkdir -p $PLAY_APPS_DIR
+        chown -R playapps:playapps $PLAY_APPS_DIR
+	fi 
     ;;
 
     abort-upgrade)
