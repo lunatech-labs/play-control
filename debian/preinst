@@ -17,16 +17,16 @@ PLAY_APPS_DIR=/usr/share/play-apps
 
 case "$1" in
     install)
-	useradd --system playapps
-	mkdir -p $PLAY_APPS_DIR 
-	chown -R playapps:playapps $PLAY_APPS_DIR
+	useradd --system playapps;
+	mkdir -p $PLAY_APPS_DIR ;
+	chown -R playapps:playapps $PLAY_APPS_DIR;
     ;;
 
     upgrade)
-	if [ ! -d "$PLAY_APPS_DIR" ] then;
-	useradd --system playapps
-        mkdir -p $PLAY_APPS_DIR
-        chown -R playapps:playapps $PLAY_APPS_DIR
+	if [ ! -d "$PLAY_APPS_DIR" ]; then
+	useradd --system playapps;
+        mkdir -p $PLAY_APPS_DIR;
+        chown -R playapps:playapps $PLAY_APPS_DIR;
 	fi 
     ;;
 

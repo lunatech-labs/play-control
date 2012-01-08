@@ -31,11 +31,11 @@ if [ -f /etc/default/play-control ] ; then
     . /etc/default/play-control
 fi
 
-if [ ! -d "$PLAY_APP_DIR" ]; then
-	useradd --system playapps
-        mkdir -p $PLAY_APPS_DIR
-        chown -R playapps:playapps $PLAY_APPS_DIR
-fi
+if [ ! -d "$PLAY_APPS_DIR" ]; then
+ mkdir -p $PLAY_APPS_DIR;
+ chown -R playapps:playapps $PLAY_APPS_DIR;
+fi 
+ 
 
 APPS="`cd $PLAY_APPS_DIR && /bin/ls`"
 
