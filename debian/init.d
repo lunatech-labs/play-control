@@ -46,8 +46,6 @@ then
 	APPS="$@"
 fi
 
-set -e
-
 running_pid()
 {
     # Check if a given process pid's cmdline matches a given name
@@ -95,12 +93,16 @@ force_stop() {
 }
 
 start_playapp() {
+	set +e
 	[ -d "$PLAY_APPS_DIR/$1" ] && /bin/su - $USER -c "cd $PLAY_APPS_DIR/$1; $PLAY dependencies; $PLAY start" > /dev/null 2>&1
+        set -e
 	return 0
 }
 
 stop_playapp() {
+	set +e
 	[ -d "$PLAY_APPS_DIR/$1" ] && /bin/su - $USER -c "cd $PLAY_APPS_DIR; $PLAY stop $1" > /dev/null 2>&1
+	set -e
 	return 0
 }
 
@@ -108,7 +110,7 @@ case "$ACTION" in
   start)
 	for APP in $APPS
 	do
-        	echo -n "Starting $DESC: "
+        	echo -n "Starting $DESC: $APP: "
 		PIDFILE="$PLAY_APPS_DIR/$APP/server.pid"
 
 		if running
